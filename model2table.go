@@ -34,7 +34,6 @@ func WriteStructsIntoFile[T any](f *File, structs []T, o *ModelTableOptions) err
 	var rows = constructRows(structs)
 
 	index := f.GetActiveSheetIndex()
-	println(index, rows)
 	sheetName := f.GetSheetName(index)
 	if o != nil && o.HasHeader {
 		writeHeader[T](f, sheetName)

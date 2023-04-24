@@ -1,7 +1,10 @@
 package excelize
 
-import "testing"
+import (
+	"testing"
 
+	"github.com/stretchr/testify/assert"
+)
 
 func TestWriteStructsIntoFile(t *testing.T) {
 	f := NewFile()
@@ -13,12 +16,12 @@ func TestWriteStructsIntoFile(t *testing.T) {
 		{Column1: "1", Column2: "2"},
 		{Column1: "3", Column2: "4"},
 	}
-	err := WriteStructsIntoFile(f, testStructs, &ModelTableOptions{HasHeader: true})
-	if err != nil {
-		t.Errorf("WriteStructsIntoFile returned error: %v", err)
-	}
-}
+	assert.NoError(t, WriteStructsIntoFile(f, testStructs, &ModelTableOptions{HasHeader: true}))
 
+	rows, err := f.GetRows("Sheet1")
+	assert.NoError(t, err)
+	assert.Equal(t, 3, len(rows))
+}
 
 func TestGetTagValues(t *testing.T) {
 	type testStruct struct {
@@ -28,14 +31,10 @@ func TestGetTagValues(t *testing.T) {
 	var t1 testStruct
 	fieldColumnMap := getTagValues(t1, "column")
 	columnAliasMap := getTagValues(t1, "columnHeader")
-	if len(fieldColumnMap) != 2 {
-		t.Errorf("getTagValues returned wrong number of fields: %v", len(fieldColumnMap))
-	}
-	if len(columnAliasMap) != 2 {
-		t.Errorf("getTagValues returned wrong number of fields: %v", len(columnAliasMap))
-	}
-}
 
+	assert.Equal(t, 2, len(fieldColumnMap))
+	assert.Equal(t, 2, len(columnAliasMap))
+}
 
 func TestConstructRows(t *testing.T) {
 	type testStruct struct {
@@ -47,7 +46,5 @@ func TestConstructRows(t *testing.T) {
 		{Column1: "3", Column2: "4"},
 	}
 	rows := constructRows(testStructs)
-	if len(rows) != 2 {
-		t.Errorf("constructRows returned wrong number of rows: %v", len(rows))
-	}
+	assert.Equal(t, 2, len(rows))
 }
