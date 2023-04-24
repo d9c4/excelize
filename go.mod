@@ -1,4 +1,4 @@
-module github.com/d9c4/excelize/v2
+module github.com/d9c4/excelize
 
 go 1.19
 
